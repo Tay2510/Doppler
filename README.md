@@ -1,6 +1,6 @@
 Doppler
 =====
-####Deploying Computationally-Efficient Deep Learning Model on iOS Device.
+####Adapting Well-Trained Deep Learning Models to iOS Devices for Recognition Tasks.
 
 ###Summary
 

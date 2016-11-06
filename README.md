@@ -1,6 +1,6 @@
 Doppler
 =====
-####Adapting Well-Trained Deep Learning Models to iOS Devices for Recognition Tasks. (Chao-Ming Yen)
+###Adapting Well-Trained Deep Learning Models to iOS Devices for Recognition Tasks. (Chao-Ming Yen)
 
 
 ##Summary

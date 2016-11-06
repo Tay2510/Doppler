@@ -9,12 +9,7 @@ The project aims to apply recent model compression techniques (e.g. quantization
 While deep learning seems to be taken for granted nowdays, application of deep learning on mobile devices is still challenging. A deep learning model can be well trained off-line on a super GPU cluster. But when trying to use the trained model on mobile devices for inference tasks, it brings serious problems. First, the RAM on mobile devices is limited. A deep learning model requires too much run-time memory for a mobile device to perform a single forward propagation. Second, the inference speed of a model and energy issue also matters. Some tricks such as vector quantization and XOR-Net are designed to preprocess pre-trained models before deploy them on mobile devices. In sum, the Doppler project aims to find the best way to compress a well-trained model so that it can be applied to mobile devices.
 
 ##The Challenge
-The challenge lies in making a pre-trained model more efficient while keeping(or even improving) its original accuracy. While some conventional compression techniques such as network pruning and vector quantization be applied, few could tell the consequences after the compression. This is because "how deep learning works" is still a mystery, and there are many unknown details that could hinder 
-
-
-Describe in a few sentences why the problem is challenging. Could you solve your problem using just a few pre-existing functions in OpenCV? Try to state explicitly what you are hoping to learn by doing this project and how is it related to mobile computer vision? A flow chart or visual depiction of what you are trying to do would be good here. Some questions to consider:
-    - Does the challenge lie in making an existing vision algorithm more    efficient in iOS?
-     - Are you trying to solve a real-world problem that can only be solved through a combination of computer vision and mobile computing?
+The challenge lies in making a pre-trained model more efficient while keeping(or even improving) its original accuracy. While some conventional compression techniques such as network pruning and vector quantization be applied, few could tell the consequences after the compression. This is because "how deep learning works" is still a mystery, and there are many unknown details waiting to be found. Since current researches about deep learning are mostly focusing on improving the accuracy instead of the efficiency of a model, finding the best way to compress a model could serve as challenging task here. Nonetheless, deep learning serves as powerful feature extractor and has great potential in mobile computer vision tasks. It's still worth the effort deploying these models on mobile devices.
 
 
 ##Goals & Deliverables

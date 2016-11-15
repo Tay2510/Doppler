@@ -31,7 +31,7 @@ Since the allotted time is limited in few weeks, reusing existing codes is cruci
 
 ##Schedule
  - by Nov. 11, 2016: Setup the Torch-iOS environment. Study XOR-Net
- - by Nov. 18, 2016: Deploy a working deep learning model on iPad 2.
+ - by Nov. 17, 2016: Deploy a working deep learning model on iPad 2. (checkpoint)
  - by Nov. 25, 2016: Implement XOR-Net version of the model on iPad 2.
  - by Dec. 02, 2016: Fine-tune the model with compression techniques.
  - by Dec. 09, 2016: Prepare for the final presentation and report.

@@ -13,6 +13,7 @@
 		73CAD9A51DDE5FC9000678E0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73CAD9A31DDE5FC9000678E0 /* Main.storyboard */; };
 		73CAD9A71DDE5FC9000678E0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 73CAD9A61DDE5FC9000678E0 /* Assets.xcassets */; };
 		73CAD9AA1DDE5FC9000678E0 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 73CAD9A81DDE5FC9000678E0 /* LaunchScreen.storyboard */; };
+		73F45C491DDE64CE008ECC91 /* Torch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73F45C481DDE64CE008ECC91 /* Torch.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		73CAD9A61DDE5FC9000678E0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		73CAD9A91DDE5FC9000678E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		73CAD9AB1DDE5FC9000678E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		73F45C481DDE64CE008ECC91 /* Torch.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Torch.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,6 +35,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				73F45C491DDE64CE008ECC91 /* Torch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +47,7 @@
 			children = (
 				73CAD9991DDE5FC9000678E0 /* playground */,
 				73CAD9981DDE5FC9000678E0 /* Products */,
+				73F45C471DDE64CD008ECC91 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -77,6 +81,14 @@
 				73CAD99B1DDE5FC9000678E0 /* main.m */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		73F45C471DDE64CD008ECC91 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73F45C481DDE64CE008ECC91 /* Torch.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -274,6 +286,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = D7A53RF6Q9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = playground/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -287,6 +303,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = D7A53RF6Q9;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = playground/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -314,6 +334,7 @@
 				73CAD9B01DDE5FC9000678E0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

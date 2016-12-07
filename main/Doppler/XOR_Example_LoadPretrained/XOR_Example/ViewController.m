@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  XOR_Example
+//  XOR_Example (modified by Chao-Ming Yen)
 //
 //  Created by Kurt Jacobs on 2015/06/12.
 //  Copyright (c) 2015 RandomDudes. All rights reserved.
@@ -28,9 +28,8 @@
     //*******************************************************
     self.t = [Torch new];
     [self.t initialize];
-    //[self.t runMain:@"main" inFolder:@"xor_lua"];
-    [self.t runMain:@"test" inFolder:@"xor_lua"];
-    [self.t loadFileWithName:@"xor_model.net" inResourceFolder:@"xor_lua" andLoadMethodName:@"loadNeuralNetwork"];
+    [self.t runMain:@"setModel" inFolder:@"torch7"];
+    [self.t loadFileWithName:@"vgg_normalized.th" inResourceFolder:@"torch7" andLoadMethodName:@"loadModel"];
     //*******************************************************
 }
 

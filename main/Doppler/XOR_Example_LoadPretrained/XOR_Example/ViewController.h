@@ -1,9 +1,8 @@
 //
 //  ViewController.h
-//  XOR_Example
+//  Doppler
 //
-//  Created by Kurt Jacobs on 2015/06/12.
-//  Copyright (c) 2015 RandomDudes. All rights reserved.
+//  modified by Chao-Ming Yen from  Kurt Jacobs's code
 //
 
 #import <UIKit/UIKit.h>
@@ -11,12 +10,17 @@
 #include <Torch/Torch.h>
 #import "XORClassifyObject.h"
 
-@interface ViewController : UIViewController
+#ifdef __cplusplus
+#import <opencv2/opencv.hpp>
+#import "opencv2/highgui/ios.h"
+#endif
+
+@interface ViewController : UIViewController<CvPhotoCameraDelegate>
 
 @property (nonatomic, strong) Torch *t;
-@property (weak, nonatomic) IBOutlet UILabel *answerLabel;
-@property (weak, nonatomic) IBOutlet UITextField *valueOneTextfield;
-@property (weak, nonatomic) IBOutlet UITextField *valueTwoTextField;
+@property (weak, nonatomic) IBOutlet UIImageView *mainView;
+@property (weak, nonatomic) IBOutlet UIImageView *resultView;
+@property (weak, nonatomic) IBOutlet UIButton *camButton;
 
 @end
 

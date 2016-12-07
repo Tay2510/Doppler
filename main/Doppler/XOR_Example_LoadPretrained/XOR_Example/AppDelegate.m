@@ -1,9 +1,8 @@
 //
 //  AppDelegate.m
-//  XOR_Example
+//  Doppler
 //
-//  Created by Kurt Jacobs on 2015/06/12.
-//  Copyright (c) 2015 RandomDudes. All rights reserved.
+//  modified by Chao-Ming Yen from  Kurt Jacobs's code
 //
 
 #import "AppDelegate.h"

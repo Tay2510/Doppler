@@ -86,11 +86,14 @@ function loadModel(weights_path)
     -- load imageContent
     img_content = torch.FloatTensor(3,256,256)
     img_content = preprocess(img_content, 256)
-
     print('[Torch]: Forward content image...')
     timer:reset()
     model(img_content)
     print('[Torch]: Forward content takes ' .. timer:time().real .. ' seconds')
+
+    -- collect weights
+    --local img_activations, _ = collect_activations(model, content_weights, {})
+
 end
 
 -- Utilities for modules
@@ -174,8 +177,9 @@ function preprocess(img, scale)
     for i = 1, 3 do
         img[i]:add(-means[i])
     end
-
-    return img:view(1, 3, img:size(2), img:size(3))
+    img_ = torch.FloatTensor(1,3,img:size(2),img:size(3))
+    img_[1] = img
+    return img_
 end
 
 function depreprocess(img)
@@ -288,6 +292,43 @@ function total_var_grad(gen)
 end
 ---------------------------------------------------------------
 
+function opfunc(input)
+    -- forward prop
+    model:forward(input)
+
+    -- backpropagate
+    local loss = 0
+    local grad = opt.cpu and torch.FloatTensor() or torch.CudaTensor()
+    grad:resize(model.output:size()):zero()
+    for i = #model.modules, 1, -1 do
+        local module_input = (i == 1) and input or model.modules[i - 1].output
+        local module = model.modules[i]
+        local name = module._name
+
+        -- add content gradient
+        if name and content_weights[name] then
+            local c_loss, c_grad = content_grad(module.output, img_activations[name])
+            local w = content_weights[name] / content_weight_sum
+            --printf('[content]\t%s\t%.2e\n', name, w * c_loss)
+            loss = loss + w * c_loss
+            grad:add(w, c_grad)
+        end
+
+        -- add style gradient
+        if name and style_weights[name] then
+            local s_loss, s_grad = style_grad(module.output, art_grams[name])
+            local w = opt.style_factor * style_weights[name] / style_weight_sum
+            --printf('[style]\t%s\t%.2e\n', name, w * s_loss)
+            loss = loss + w * s_loss
+            grad:add(w, s_grad)
+        end
+        grad = module:backward(module_input, grad)
+    end
+
+    -- total variation regularization for denoising
+    grad:add(total_var_grad(input):mul(opt.smoothness))
+    return loss, grad:view(-1)
+end
 
 
 --[[

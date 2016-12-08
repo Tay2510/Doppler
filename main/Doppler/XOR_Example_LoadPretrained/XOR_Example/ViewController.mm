@@ -56,7 +56,7 @@
     [self.t runMain:@"main" inFolder:@"torch7"];
     [self.t loadFileWithName:@"vgg_normalized.th" inResourceFolder:@"torch7" andLoadMethodName:@"loadModel"];
     //[self.t loadFileWithName:@"" inResourceFolder:@"torch7" andLoadMethodName:@"loadContent"];
-    //[self.t loadFileWithName:@"" inResourceFolder:@"torch7" andLoadMethodName:@"forwardContent"];    
+    //[self.t loadFileWithName:@"" inResourceFolder:@"torch7" andLoadMethodName:@"forwardContent"];
     //*******************************************************
 }
 

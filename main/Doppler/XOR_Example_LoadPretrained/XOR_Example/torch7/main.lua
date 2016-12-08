@@ -1,58 +1,75 @@
 
-
+-- Doppler lua/torch script
+-- Modifed by Chao-Ming Yen from Kai Sheng Tai's github repo "neuralart"
+-- =====================================================================
 --torch.setdefaulttensortype('torch.FloatTensor')
 
 -- some globals
+
 model = ""
+img_content = ""
+img_style = ""
 timer = torch.Timer()
 
+style_weights = {
+        ['conv1_1'] = 1,
+        ['conv2_1'] = 1,
+        ['conv3_1'] = 1,
+        ['conv4_1'] = 1,
+        ['conv5_1'] = 1,
+    }
+
+    content_weights = {
+        ['conv4_2'] = 1,
+}
+
 function loadModel(weights_path)
-    print('Torch: loading weight tensor...')
+    print('[Torch]: loading weight tensor...')
     timer:reset()
     local weights = torch.load(weights_path)
-    print(timer:time().real .. ' seconds')
+    print('[Torch]: loading weight tensor takes '.. timer:time().real .. ' seconds')
 
-    print('Torch: creating model...')
+    print('[Torch]: creating model...')
     timer:reset()
 
     -- create model template
     model = nn.Sequential()
         :add(nn.SpatialConvolution(3, 64, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv1_1'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(64, 64, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv1_2'))
-        :add(nn.SpatialAveragePooling(2, 2, 2, 2))
+        :add(nn.ReLU(true))
+        :add(nn.SpatialMaxPooling(2, 2, 2, 2))
         :add(nn.SpatialConvolution(64, 128, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv2_1'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(128, 128, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv2_2'))
-        :add(nn.SpatialAveragePooling(2, 2, 2, 2))
+        :add(nn.ReLU(true))
+        :add(nn.SpatialMaxPooling(2, 2, 2, 2))
         :add(nn.SpatialConvolution(128, 256, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv3_1'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(256, 256, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv3_2'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(256, 256, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv3_3'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(256, 256, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv3_4'))
-        :add(nn.SpatialAveragePooling(2, 2, 2, 2))
+        :add(nn.ReLU(true))
+        :add(nn.SpatialMaxPooling(2, 2, 2, 2))
         :add(nn.SpatialConvolution(256, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv4_1'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv4_2'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv4_3'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv4_4'))
-        :add(nn.SpatialAveragePooling(2, 2, 2, 2))
+        :add(nn.ReLU(true))
+        :add(nn.SpatialMaxPooling(2, 2, 2, 2))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv5_1'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv5_2'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv5_3'))
+        :add(nn.ReLU(true))
         :add(nn.SpatialConvolution(512, 512, 3, 3, 1, 1, 1, 1))
-        :add(nn.ReLU(true):name('conv5_4'))
+        :add(nn.ReLU(true))
 
     -- load weights
 
@@ -61,11 +78,20 @@ function loadModel(weights_path)
         if module.bias then module.bias:copy(weights[i][2]) end
     end
 
-    print(timer:time().real .. ' seconds')
+    print('[Torch]: Create model takes ' .. timer:time().real .. ' seconds')
 
-    collectgarbage()
+    --collectgarbage()
+    model:float()
+
+    -- load imageContent
+    img_content = torch.FloatTensor(3,256,256)
+    img_content = preprocess(img_content, 256)
+
+    print('[Torch]: Forward content image...')
+    timer:reset()
+    model(img_content)
+    print('[Torch]: Forward content takes ' .. timer:time().real .. ' seconds')
 end
-
 
 -- Utilities for modules
 ---------------------------------------------------------------
@@ -111,92 +137,158 @@ end
 ---------------------------------------------------------------
 
 
--- add missing function in torch-ios
+--
+-- Convenience functions to replicate Caffe preprocessing
 ---------------------------------------------------------------
-local SpatialAveragePooling, parent = torch.class('nn.SpatialAveragePooling', 'nn.Module')
+local means = { 104, 117, 123 }
 
-function SpatialAveragePooling:__init(kW, kH, dW, dH, padW, padH)
-   parent.__init(self)
+function preprocess(img, scale)
+    -- handle monochrome images
+    if img:size(1) == 1 then
+        local copy = torch.FloatTensor(3, img:size(2), img:size(3))
+        copy[1] = img[1]
+        copy[2] = img[1]
+        copy[3] = img[1]
+        img = copy
+    elseif img:size(1) == 4 then
+        img = img[{{1,3},{},{}}]
+    end
 
-   self.kW = kW
-   self.kH = kH
-   self.dW = dW or 1
-   self.dH = dH or 1
-   self.padW = padW or 0
-   self.padH = padH or 0
-   self.ceil_mode = false
-   self.count_include_pad = true
-   self.divide = true
+    local w, h = img:size(3), img:size(2)
+    if scale then
+        if w < h then
+            img = image.scale(img, scale * w / h, scale)
+        else
+            img = image.scale(img, scale, scale * h / w)
+        end
+    end
+
+    -- reverse channels
+    local copy = torch.FloatTensor(img:size())
+    copy[1] = img[3]
+    copy[2] = img[2]
+    copy[3] = img[1]
+    img = copy
+
+    img:mul(255)
+    for i = 1, 3 do
+        img[i]:add(-means[i])
+    end
+
+    return img:view(1, 3, img:size(2), img:size(3))
 end
 
-function SpatialAveragePooling:ceil()
-   self.ceil_mode = true
-   return self
-end
+function depreprocess(img)
+    local copy = torch.FloatTensor(3, img:size(3), img:size(4)):copy(img)
+    for i = 1, 3 do
+        copy[i]:add(means[i])
+    end
+    copy:div(255)
 
-function SpatialAveragePooling:floor()
-   self.ceil_mode = false
-   return self
-end
-
-function SpatialAveragePooling:setCountIncludePad()
-   self.count_include_pad = true
-   return self
-end
-
-function SpatialAveragePooling:setCountExcludePad()
-   self.count_include_pad = false
-   return self
-end
-
-local function backwardCompatible(self)
-   if self.ceil_mode == nil then
-      self.ceil_mode = false
-      self.count_include_pad = true
-      self.padH = 0
-      self.padW = 0
-   end
-end
-
-function SpatialAveragePooling:updateOutput(input)
-   backwardCompatible(self)
-   input.THNN.SpatialAveragePooling_updateOutput(
-      input:cdata(),
-      self.output:cdata(),
-      self.kW, self.kH,
-      self.dW, self.dH,
-      self.padW, self.padH,
-      self.ceil_mode,
-      self.count_include_pad
-   )
-   -- for backward compatibility with saved models
-   -- which are not supposed to have "divide" field
-   if not self.divide then
-     self.output:mul(self.kW*self.kH)
-   end
-   return self.output
-end
-
-function SpatialAveragePooling:updateGradInput(input, gradOutput)
-   if self.gradInput then
-      input.THNN.SpatialAveragePooling_updateGradInput(
-         input:cdata(),
-         gradOutput:cdata(),
-         self.gradInput:cdata(),
-         self.kW, self.kH,
-         self.dW, self.dH,
-         self.padW, self.padH,
-         self.ceil_mode,
-         self.count_include_pad
-      )
-      -- for backward compatibility
-      if not self.divide then
-         self.gradInput:mul(self.kW*self.kH)
-      end
-      return self.gradInput
-   end
+    -- reverse channels
+    local copy2 = torch.FloatTensor(copy:size())
+    copy2[1] = copy[3]
+    copy2[2] = copy[2]
+    copy2[3] = copy[1]
+    copy2:clamp(0, 1)
+    return copy2
 end
 ---------------------------------------------------------------
+
+--
+-- Cost functions
+---------------------------------------------------------------
+-- compute the Gramian matrix for input
+function gram(input)
+    local k = input:size(2)
+    local flat = input:view(k, -1)
+    local gram = torch.mm(flat, flat:t())
+    return gram
+end
+
+function collect_activations(model, activation_layers, gram_layers)
+    local activations, grams = {}, {}
+    for i, module in ipairs(model.modules) do
+        local name = module._name
+        if name then
+            if activation_layers[name] then
+                local activation = module.output.new()
+                activation:resize(module.output:nElement())
+                activation:copy(module.output)
+                activations[name] = activation
+            end
+
+            if gram_layers[name] then
+                grams[name] = gram(module.output):view(-1)
+            end
+        end
+    end
+    return activations, grams
+end
+
+--
+-- gradient computation functions
+---------------------------------------------------------------
+local euclidean = nn.MSECriterion()
+euclidean.sizeAverage = false
+if opt.cpu then
+    euclidean:float()
+else
+    euclidean:cuda()
+end
+
+function style_grad(gen, orig_gram)
+    local k = gen:size(2)
+    local size = gen:nElement()
+    local size_sq = size * size
+    local gen_gram = gram(gen)
+    local gen_gram_flat = gen_gram:view(-1)
+    local loss = euclidean:forward(gen_gram_flat, orig_gram)
+    local grad = euclidean:backward(gen_gram_flat, orig_gram)
+                          :view(gen_gram:size())
+
+    -- normalization helps improve the appearance of the generated image
+    local norm = size_sq
+    if opt.model == 'inception' then
+        norm = torch.abs(grad):mean() * size_sq
+    else
+        norm = size_sq
+    end
+    if norm > 0 then
+        loss = loss / norm
+        grad:div(norm)
+    end
+    grad = torch.mm(grad, gen:view(k, -1)):view(gen:size())
+    return loss, grad
+end
+
+function content_grad(gen, orig)
+    local gen_flat = gen:view(-1)
+    local loss = euclidean:forward(gen_flat, orig)
+    local grad = euclidean:backward(gen_flat, orig):view(gen:size())
+    if opt.model == 'inception' then
+        local norm = torch.abs(grad):mean()
+        if norm > 0 then
+            loss = loss / norm
+            grad:div(norm)
+        end
+    end
+    return loss, grad
+end
+
+-- total variation gradient
+function total_var_grad(gen)
+    local x_diff = gen[{{}, {}, {1, -2}, {1, -2}}] - gen[{{}, {}, {1, -2}, {2, -1}}]
+    local y_diff = gen[{{}, {}, {1, -2}, {1, -2}}] - gen[{{}, {}, {2, -1}, {1, -2}}]
+    local grad = gen.new():resize(gen:size()):zero()
+    grad[{{}, {}, {1, -2}, {1, -2}}]:add(x_diff):add(y_diff)
+    grad[{{}, {}, {1, -2}, {2, -1}}]:add(-1, x_diff)
+    grad[{{}, {}, {2, -1} ,{1, -2}}]:add(-1, y_diff)
+    return grad
+end
+---------------------------------------------------------------
+
+
 
 --[[
 function classifyExample(tensorInput)

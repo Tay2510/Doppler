@@ -1,4 +1,4 @@
-require 'nn'
+--require 'nn'
 
-print('Torch is King!')
+print(model)
 

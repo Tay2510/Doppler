@@ -1,6 +1,6 @@
 Doppler
 =====
-####Adapting Well-Trained Deep Learning Models to iOS Devices for Recognition Tasks. (Chao-Ming Yen)
+####Compressing Deep Learning Models for Artistic Style Transformation on iOS Devices. (Chao-Ming Yen)
 
 
 ##Summary

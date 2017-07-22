@@ -1,7 +1,7 @@
 Doppler
 =====
 ###Compressing Deep Learning Models for Artistic Style Transformation on iOS Devices. (Chao-Ming Yen)
-(https://www.youtube.com/watch?v=9KOaqMKK1mk "Doppler")
+(https://www.youtube.com/watch?v=9KOaqMKK1mk)
 
 ##Summary
 The project aims to apply recent model compression techniques (e.g. quantization, XOR-Net) on a pre-trained deep learning model, and optimizes efficiency of the compressed model on iOS devices for artistic style transformation tasks.

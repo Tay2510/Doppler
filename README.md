@@ -1,6 +1,6 @@
 Doppler
 =====
-####Compressing Deep Learning Models for Artistic Style Transformation on iOS Devices. (Chao-Ming Yen)
+Compressing Deep Learning Models for Artistic Style Transformation on iOS Devices. (Chao-Ming Yen)
 [![Doppler](https://dl.dropboxusercontent.com/u/92784443/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202016-12-09%2019.30.29.png)](https://www.youtube.com/watch?v=9KOaqMKK1mk "Doppler")
 
 ##Summary
